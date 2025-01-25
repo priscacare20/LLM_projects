@@ -111,3 +111,22 @@ def messages_for(website):
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt_for(website)},
     ]
+
+def new_summary(url, chrome_path, openai_api):
+    """
+    Get a summary of cryptocurrency news from a website.
+
+    Args:
+        url (str): The URL of the website.
+        chrome_path (str): Path to the Chrome binary.
+        openai_api (OpenAI): OpenAI API client.
+
+    Returns:
+        str: The summary of the website content.
+    """
+    web = WebsiteCrawler(url, 30, chrome_path)
+    response = openai_api.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages_for(web),
+    )
+    return response.choices[0].message.content
