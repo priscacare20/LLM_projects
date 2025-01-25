@@ -186,3 +186,25 @@ def final_summary(news, openai_api):
     summary = response.choices[0].message.content
     display(Markdown(summary))
     return summary
+
+def send_email(sender, receiver, subject, body, password):
+    """
+    Send an email with the given content.
+
+    Args:
+        sender (str): The sender's email address.
+        receiver (str): The receiver's email address.
+        subject (str): The subject of the email.
+        body (str): The body of the email.
+        password (str): The sender's email password.
+    """
+    email_message = EmailMessage()
+    email_message["From"] = sender
+    email_message["To"] = receiver
+    email_message["Subject"] = subject
+    email_message.set_content(body)
+
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
+        smtp.login(sender, password)
+        smtp.sendmail(sender, receiver, email_message.as_string())
