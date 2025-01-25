@@ -167,3 +167,22 @@ def messages(all_news):
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": user_prompt(all_news)},
     ]
+
+def final_summary(news, openai_api):
+    """
+    Generate a final summarized email-ready news report.
+
+    Args:
+        news (dict): A dictionary of news summaries from multiple websites.
+        openai_api (OpenAI): OpenAI API client.
+
+    Returns:
+        str: The summarized report in markdown format.
+    """
+    response = openai_api.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=messages(news),
+    )
+    summary = response.choices[0].message.content
+    display(Markdown(summary))
+    return summary
