@@ -91,3 +91,23 @@ def user_prompt_for(website):
         "Provide a link to access this breaking news.\n"
         f"{website.text}"
     )
+
+def messages_for(website):
+    """
+    Generate messages for the OpenAI model based on the website content.
+
+    Args:
+        website (WebsiteCrawler): The WebsiteCrawler object.
+
+    Returns:
+        list: A list of message dictionaries for the OpenAI API.
+    """
+    system_prompt = (
+        "You are a crypto investor that searches websites to extract and summarize daily latest crypto news that will impact the price of crypto. "
+        "Ignore text that is not crypto-related or not current news. Do nothing if you are unable to access the website or there is no content available. Respond in markdown."
+    )
+
+    return [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt_for(website)},
+    ]
