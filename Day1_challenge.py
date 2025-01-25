@@ -130,3 +130,22 @@ def new_summary(url, chrome_path, openai_api):
         messages=messages_for(web),
     )
     return response.choices[0].message.content
+
+def user_prompt(all_news):
+    """
+    Generate a user prompt to summarize news from multiple websites.
+
+    Args:
+        all_news (dict): A dictionary where keys are website URLs and values are news summaries.
+
+    Returns:
+        str: The user prompt string.
+    """
+    prompt = (
+        "You are looking at the content of a Python dictionary where the key is the source website and the values are the top 3 latest news from that website.\n"
+        "The contents of this dictionary are as follows; Please combine and summarize all the news avoiding duplicating the information. Highlight the top 12 latest news that have a high impact on cryptocurrency prices.\n"
+        "When news appears in multiple sources, identify all the website sources it appeared in.\n"
+    )
+    for source, news in all_news.items():
+        prompt += f"source={source}, news={news}\n"
+    return prompt
