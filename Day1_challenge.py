@@ -149,3 +149,21 @@ def user_prompt(all_news):
     for source, news in all_news.items():
         prompt += f"source={source}, news={news}\n"
     return prompt
+
+def messages(all_news):
+    """
+    Generate messages for summarizing news from multiple websites.
+
+    Args:
+        all_news (dict): A dictionary of news summaries from websites.
+
+    Returns:
+        list: A list of message dictionaries for the OpenAI API.
+    """
+    system_prompt = (
+        "You are a crypto news analyst named Amy that reports crypto news. Prepare the news in a format that can be emailed to crypto enthusiasts. Add the source to each news."
+    )
+    return [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": user_prompt(all_news)},
+    ]
