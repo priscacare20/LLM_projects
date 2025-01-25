@@ -208,3 +208,41 @@ def send_email(sender, receiver, subject, body, password):
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as smtp:
         smtp.login(sender, password)
         smtp.sendmail(sender, receiver, email_message.as_string())
+
+if __name__ == "__main__":
+    load_dotenv()
+
+    # Load API keys and credentials
+    api_key = os.getenv("OPENAI_API_KEY")
+    email_password = os.getenv("EMAIL_PASSWORD")
+
+    if not api_key or not email_password:
+        print("Missing API key or email password in environment variables.")
+        exit(1)
+
+    openai_api = OpenAI(api_key)
+    chrome_path = "C:/Program Files/Google/Chrome/Application/chrome.exe"
+
+    website_list = [
+        "https://www.coindesk.com",
+        "https://www.cointelegraph.com/",
+    ]
+
+    news_stack = {}
+    for website in website_list:
+        try:
+            summary = new_summary(website, chrome_path, openai_api)
+            news_stack[website] = summary
+        except Exception as e:
+            print(f"Unable to access {website}: {e}")
+
+    # Generate final summarized report
+    email_content = final_summary(news_stack, openai_api)
+
+    sender_email = "xxx123@gmail.com"
+    receiver_email = "yyy123@gmail.com"
+
+    subject = email_content.split('\n')[0][9:]  # Extract the first line as the subject
+    body = '\n'.join(email_content.split('\n')[1:])
+
+    send_email(sender_email, receiver_email, subject, body, email_password)
