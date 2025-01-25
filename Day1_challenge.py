@@ -74,3 +74,20 @@ class WebsiteCrawler:
 
         finally:
             self.driver.quit()
+
+def user_prompt_for(website):
+    """
+    Generate a user prompt for summarizing news from a website.
+
+    Args:
+        website (WebsiteCrawler): The WebsiteCrawler object containing the website's content.
+
+    Returns:
+        str: The user prompt string.
+    """
+    return (
+        f"You are looking at a website titled {website.title}\n"
+        "The contents of this website are as follows; please highlight the top 3 breaking news related to cryptocurrencies.\n"
+        "Provide a link to access this breaking news.\n"
+        f"{website.text}"
+    )
