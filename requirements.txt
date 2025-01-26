@@ -31,6 +31,7 @@ chromadb
 plotly
 jupyter-dash
 beautifulsoup4
+selenium
 pydub
 modal
 ollama
@@ -40,3 +41,8 @@ bitsandbytes
 psutil
 setuptools
 speedtest-cli
+undetected_chromedriver
+webdriver-manager
+schedule
+apscheduler
+pytz
