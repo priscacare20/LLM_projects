@@ -21,6 +21,11 @@ from email.message import EmailMessage
 import ssl
 import smtplib
 from IPython.display import Markdown, display
+from apscheduler.schedulers.blocking import BlockingScheduler
+from apscheduler.triggers.cron import CronTrigger
+import time as time_module
+import pytz
+from datetime import datetime
 
 
 class WebsiteCrawler:
@@ -209,7 +214,10 @@ def send_email(sender, receiver, subject, body, password):
         smtp.login(sender, password)
         smtp.sendmail(sender, receiver, email_message.as_string())
 
-if __name__ == "__main__":
+def job():
+    """
+    The scheduled job to fetch news, summarize, and send an email.
+    """
     load_dotenv()
 
     # Load API keys and credentials
@@ -218,14 +226,21 @@ if __name__ == "__main__":
 
     if not api_key or not email_password:
         print("Missing API key or email password in environment variables.")
-        exit(1)
+        return
 
-    openai_api = OpenAI(api_key)
+    openai_api = OpenAI()
     chrome_path = "C:/Program Files/Google/Chrome/Application/chrome.exe"
 
     website_list = [
         "https://www.coindesk.com",
         "https://www.cointelegraph.com/",
+        "https://beincrypto.com/",
+        "https://www.decrypt.co/",
+        "https://thedefiant.io/",
+        "https://www.coinbureau.com",
+        "https://www.blockworks.co",
+        "https://www.reddit.com/r/CryptoCurrency/?rdt=65535",
+        "https://www.cryptonews.com/"
     ]
 
     news_stack = {}
@@ -239,10 +254,39 @@ if __name__ == "__main__":
     # Generate final summarized report
     email_content = final_summary(news_stack, openai_api)
 
-    sender_email = "xxx123@gmail.com"
-    receiver_email = "yyy123@gmail.com"
+    # sender_email = "xxx123@gmail.com"
+    # receiver_email = "yyy123@gmail.com"
+    sender_email = "chiamy694@gmail.com"
+    receiver_email = "priscacare20@gmail.com"
 
     subject = email_content.split('\n')[0][9:]  # Extract the first line as the subject
     body = '\n'.join(email_content.split('\n')[1:])
 
     send_email(sender_email, receiver_email, subject, body, email_password)
+
+if __name__ == "__main__":
+    # Schedule the job
+    # Define Central Time (CT)
+    # ct_timezone = pytz.timezone("US/Central")
+    # current_time = datetime.now(ct_timezone).strftime("%H:%M")
+    # print(f"Current Central Time: {current_time}")
+    # hour = 5
+    # minute = 00
+    # second = 00
+    # try:
+    #     schedule.every().day.at(f"{hour}:{minute}:{second}").do(job)
+    #
+    #     print("Scheduler is running. Press Ctrl+C to exit.")
+    #
+    #     while True:
+    #         schedule.run_pending()
+    #         time_module.sleep(1)
+    # except schedule.ScheduleValueError as e:
+    #     print(f"Schedule error: {e}")
+
+    scheduler = BlockingScheduler()
+    ct_timezone = pytz.timezone("US/Central")
+    scheduler.add_job(job, trigger=CronTrigger(hour=4, minute=52, timezone=ct_timezone))
+
+    print("Scheduler set for 4:52 AM Central Time. Press Ctrl+C to exit.")
+    scheduler.start()
