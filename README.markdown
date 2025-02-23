@@ -1,5 +1,5 @@
 # Mini Projects on LLM
-This repository contains projects use to enforce my learnings on LLM.
+This repository contains projects use to enforce my learnings on LLM. Each project was explained in my [medium blog](https://medium.com/@priscacare20). 
 
 ### Setup:
 1. Create a new virtual environment: `python -m venv venv`
