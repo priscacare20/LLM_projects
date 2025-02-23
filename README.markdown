@@ -1,3 +1,6 @@
+# Mini Projects on LLM
+This repository contains projects use to enforce my learnings on LLM.
+
 ### Setup:
 1. Create a new virtual environment: `python -m venv venv`
 2. Activate the virtual environment on PC: `venv\Scripts\activate`
